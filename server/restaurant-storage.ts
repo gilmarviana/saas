@@ -1,1 +1,0 @@
-// Lógica de acesso ao banco será migrada para funções serverless em /api.
