@@ -1,0 +1,245 @@
+
+Estrutura geral do sistema (arquitetura e hierarquia)
+
+Fluxo de usuários (admin, empresa, garçom, cliente)
+
+Funcionalidades por tela
+
+Planos e Integração com Asaas
+
+Templates e geração de landing pages
+
+Entrega e personalização de área
+
+Extras e recomendações técnicas
+
+1. Estrutura Geral do Sistema
+plaintext
+Copiar
+Editar
+SaaS MicroSistema
+├── Super Admin (Você)
+│ ├── Dashboard geral
+│ ├── Cadastro/Gerenciamento de empresas
+│ ├── Gerenciamento de planos (Asaas)
+│ ├── Visualização de planos ativos, trial, inadimplentes
+│ ├── Suporte central
+│ └── Editor de templates para landing pages
+│
+├── Empresa
+│ ├── Dashboard
+│ ├── Pedidos
+│ ├── Cardápio (categorias, pratos, porções, bebidas)
+│ ├── Clientes
+│ ├── Financeiro (vendas, despesas)
+│ ├── Relatórios
+│ ├── QR Code Cardápio Digital
+│ ├── Entregas (mapa, áreas de entrega personalizadas)
+│ ├── Integração Evolution API (WhatsApp)
+│ ├── Configurações de aparência e dados da landing page
+│ └── Suporte (para o dono do sistema)
+│
+├── Garçom
+│ └── Tela simplificada de pedidos por mesa
+│
+└── Cliente Final
+├── Landing page da empresa
+├── Cardápio digital
+└── Carrinho → Geração de pedido via WhatsApp
+2. Fluxo de Usuários
+a) Super Admin
+Login no painel master
+
+Visualiza dashboards e estatísticas globais
+
+Cria, edita e remove empresas
+
+Gera links de planos (Asaas) e define limites por plano
+
+Gera e customiza templates de sites para empresas
+
+b) Empresa (cliente SaaS)
+Cadastro via landing page (30 dias grátis)
+
+Acesso ao painel admin
+
+Configura aparência do site, cardápio, preços
+
+Recebe pedidos, confirma e movimenta financeiramente
+
+c) Garçom
+Login vinculado à empresa
+
+Visualiza cardápio
+
+Realiza pedidos por mesa ou nome do cliente
+
+d) Cliente final
+Acessa o site da empresa (cardápio)
+
+Monta pedido no carrinho
+
+Finaliza → Redirecionamento para o WhatsApp da empresa com o pedido formatado
+
+3. Funcionalidades por Tela
+Super Admin
+Dashboard (empresas, pedidos globais, planos ativos)
+
+Cadastro e gestão de empresas
+
+Editor de templates
+
+Plano de assinaturas e integrações com Asaas
+
+Suporte de empresas
+
+Empresa
+Dashboard (KPIs: pedidos, vendas, cancelamentos, etc)
+
+Pedidos (listar, confirmar venda, status)
+
+Clientes (cadastro, histórico)
+
+Financeiro (entradas por pedidos e lançamentos manuais)
+
+Impressão de pedidos
+
+Relatórios por período
+
+Cardápio (categorias, itens, preços, disponibilidade)
+
+QR Code gerado dinamicamente
+
+Integração Evolution API (chave + status)
+
+Entregas (mapa + regras de frete por KM)
+
+Suporte e configurações visuais
+
+Garçom
+Login restrito
+
+Visualização de mesas/clientes
+
+Lançamento de pedidos por mesa
+
+Cliente (landing da empresa)
+Cardápio digital (com imagens, preços, descrições)
+
+Carrinho de compras
+
+Botão "Finalizar pedido" → Redireciona para WhatsApp com pedido formatado
+
+4. Planos e Integração com Asaas
+Planos disponíveis:
+
+Plano Valor Pedidos no WhatsApp Painel Financeiro Integração Evolution
+Gratuito R$ 0 10/mês ❌ ❌
+Padrão R$ 30/mês 100/mês ✅ ❌
+Premium R$ 50/mês 300/mês ✅ ✅
+Adicional R$ 50 +300 pedidos — —
+
+Integração Asaas (Sugestão de fluxo técnico):
+
+Crie um "Produto" no Asaas para cada plano
+
+Use a API do Asaas para:
+
+Gerar checkout link
+
+Verificar status da assinatura
+
+Notificações por Webhook
+
+Cancelamentos
+
+Fluxo:
+
+Cliente escolhe plano
+
+Sistema gera link do Asaas com callback
+
+Ao pagamento, ativar plano
+
+Notificações de cobrança por webhook → atualizar status no banco
+
+5. Templates e Landing Pages
+Cada empresa que assinar:
+
+Escolhe um template base
+
+O sistema clona esse template
+
+Landing é personalizada com:
+
+Nome da empresa
+
+Contato (WhatsApp)
+
+Cores e logotipo
+
+Cardápio vinculado
+
+6. Área de Entrega (como no iFood)
+Fluxo de configuração:
+
+Tela com mapa (API Google Maps)
+
+Seleção de áreas por raio, traçado ou CEP
+
+Regras de frete por faixa:
+
+< 1km → R$1,00
+
+1km a 5km → R$2,00/km
+
+Tempo estimado de entrega manual
+
+Permitir salvar múltiplas áreas
+
+Modo visual para editar/excluir regiões
+
+Integração com cálculo de distância percorrida real
+
+7. Recomendações Técnicas
+Stack sugerida:
+
+Frontend: Next.js ou Nuxt
+
+Backend: Node.js com Supabase ou Firebase
+
+Banco: Supabase (PostgreSQL) com row-level security para isolar empresas
+
+Auth: Supabase Auth ou Clerk
+
+API Pagamento: Asaas
+
+Integração WhatsApp: Evolution API
+
+QR Code: qrcode.react ou qrcode-generator
+
+Mapa: Google Maps JS API
+
+Hospedagem: Vercel ou DigitalOcean + Cloudflare
+
+
+
+Crie um esqueleto do projeto em Next.js com Supabase criado com a estrutura base, incluindo:
+
+Conexões com Supabase, Asaas e Evolution API.
+
+Landing page básica.
+
+Tela de login com Supabase Auth.
+
+Estrutura modular pronta para expandir com páginas e componentes.
+
+Criar o painel do super admin (/dashboard/superadmin.tsx)
+
+Implementar o dashboard da empresa (/dashboard/empresa.tsx)
+
+Criar estrutura de banco de dados no Supabase (empresas, pedidos, clientes, planos)
+
+Configurar webhooks do Asaas para upgrade/downgrade automático
+
+Implementar área de entregas com Google Maps API
